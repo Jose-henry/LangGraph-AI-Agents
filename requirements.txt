@@ -1,0 +1,17 @@
+langchain
+langchain_postgres
+langchain-openai
+sqlalchemy
+psycopg>=3.0.0
+psycopg2-binary
+python-dotenv
+pydantic
+pinecone
+langchain-pinecone
+pinecone-notebooks
+langgraph
+langsmith
+fastapi
+uvicorn
+dotenv
+requests

@@ -1,0 +1,31 @@
+C:\Users\cherub\OneDrive\Desktop\test\langchain
+├── QnA
+|  ├── Dockerfile
+|  ├── src
+|  |  ├── agent.py
+|  |  ├── main.py
+|  |  ├── tool.py
+|  |  ├── __init__.py
+|  |  └── __pycache__
+|  └── __pycache__
+|     ├── agent.cpython-312.pyc
+|     ├── main.cpython-312.pyc
+|     ├── tool.cpython-312.pyc
+|     └── __init__.cpython-312.pyc
+├── rag
+|  ├── Dockerfile
+|  ├── src
+|  |  ├── agent.py
+|  |  ├── main.py
+|  |  ├── tool.py
+|  |  ├── __init__.py
+|  |  └── __pycache__
+|  └── __pycache__
+|     ├── agent.cpython-312.pyc
+|     ├── main.cpython-312.pyc
+|     ├── tool.cpython-312.pyc
+|     └── __init__.cpython-312.pyc
+└── requirements.txt
+
+directory: 8 file: 19
+
