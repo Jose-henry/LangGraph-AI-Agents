@@ -126,10 +126,9 @@ def vector_search(query: str, filter_dict: Optional[Dict[str, Any]] = None, k: i
 
 
  # Yugabyte
-
+ 
 import os
 from typing import Optional, Dict, Any
-from pydantic import BaseModel, Field
 from sqlalchemy import create_engine, text
 from langchain_postgres.vectorstores import PGVector
 from langchain_openai import OpenAIEmbeddings
@@ -138,26 +137,24 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Retrieve the connection string from environment variables
-connection_string = os.getenv(
-    "YUGABYTE_DB_URL"
-)
+connection_string = os.getenv("YUGABYTE_DB_URL")
 
-""" # Create engine
+# Create engine
 engine = create_engine(connection_string)
 
 # Set the YugabyteDB flag before initializing PGVector
 with engine.connect() as connection:
     connection.execute(text("SET yb_silence_advisory_locks_not_supported_error = on;"))
     connection.commit()
- """
+
 # Initialize the OpenAI embeddings model
 embedding_model = OpenAIEmbeddings(model="text-embedding-3-small")
 
 # Initialize the PGVector store
 pgvector_store = PGVector(
     embeddings=embedding_model,
-    collection_name="documents",
-    connection=connection_string,
+    collection_name="documents",  # This should match the value in the 'name' column of langchain_pg_collection
+    connection=engine,
     use_jsonb=True,
 )
 
@@ -166,22 +163,24 @@ def vector_search(query: str, filter_dict: Optional[Dict[str, Any]] = None, k: i
     print(f"Filter: {filter_dict}")
     print(f"Retrieving {k} results...")
 
-    # Generate the embedding for the query
-    query_embedding = embedding_model.embed_query(query)
-    print(f"Query Embedding: {query_embedding}")  # Debugging output
-
-    # Manually check results
     try:
+        # Perform the similarity search
         raw_results = pgvector_store.similarity_search_with_score(query, k=k, filter=filter_dict)
-        print(f"Raw Results: {raw_results}")  # Debugging output
-
+        
         if not raw_results:
             print("No matching results found!")
             return "No results found."
 
-        return "\n".join([
-            f"Content: {doc.page_content}\nScore: {score}\nMetadata: {doc.metadata}\n"
-            for doc, score in raw_results
-        ])
+        # Format and return the results
+        formatted_results = []
+        for i, (doc, score) in enumerate(raw_results, 1):
+            formatted_results.append(f"Result {i}:")
+            formatted_results.append(f"Content: {doc.page_content}")
+            formatted_results.append(f"Score: {score}")
+            formatted_results.append(f"Metadata: {doc.metadata}")
+            formatted_results.append("")  # Empty line for readability
+        
+        return "\n".join(formatted_results)
     except Exception as e:
+        print(f"Error in vector search: {str(e)}")
         return f"Error performing vector search: {str(e)}"

@@ -1,5 +1,8 @@
 FROM python:3.10-slim
 
+# Install required system dependencies including libpq-dev and build tools
+RUN apt-get update && apt-get install -y libpq-dev gcc
+
 # Set the working directory in the container
 WORKDIR /app
 
@@ -12,7 +15,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy the application code
 COPY rag/src/ ./src/
-# Make sure __init__.py is in the src directory
+# Ensure __init__.py is present in the src directory
 RUN touch ./src/__init__.py
 
 # Set Python path to recognize the package
