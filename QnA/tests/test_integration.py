@@ -4,6 +4,7 @@ from src.main import app
 import requests
 from unittest.mock import patch
 
+
 client = TestClient(app)
 
 def test_health_check():
@@ -33,6 +34,7 @@ def test_query_endpoint_success():
     test_query = {
         "query": "What is the meaning of life?",
         "thread_id": "test-thread-id"
+
     }
     
     response = client.post("/query", json=test_query)
@@ -94,3 +96,10 @@ def test_long_query_handling():
 #     responses = asyncio.gather(*[make_request() for _ in range(5)])
 #     for response in responses:
 #         assert response.status_code == 200 
+
+# @pytest.mark.integration
+# def test_concurrent_requests():
+#     """Test handling of concurrent requests"""
+#     import asyncio
+#     import httpx
+
