@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: agents-ingress
+spec:
+  ingressClassName: "nginx"
+  rules:
+    - host: qna-rag-agent.com
+      http:
+        paths:
+          # Route for GET requests to `/`
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: qna-service
+                port:
+                  number: 8000
+          # Route for POST requests to `/query`
+          - path: /query
+            pathType: Prefix
+            backend:
+              service:
+                name: qna-service
+                port:
+                  number: 8000

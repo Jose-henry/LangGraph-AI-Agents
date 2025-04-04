@@ -65,7 +65,7 @@
 
 # Pinecone
 
-""" import os
+import os
 from typing import Optional, Dict, Any
 from pydantic import BaseModel, Field
 from pinecone import Pinecone, ServerlessSpec
@@ -122,11 +122,11 @@ def vector_search(query: str, filter_dict: Optional[Dict[str, Any]] = None, k: i
         ])
     except Exception as e:
         return f"Error performing vector search: {str(e)}"
- """
+ 
 
 
  # Yugabyte
- 
+"""  
 import os
 from typing import Optional, Dict, Any
 from sqlalchemy import create_engine, text
@@ -183,4 +183,4 @@ def vector_search(query: str, filter_dict: Optional[Dict[str, Any]] = None, k: i
         return "\n".join(formatted_results)
     except Exception as e:
         print(f"Error in vector search: {str(e)}")
-        return f"Error performing vector search: {str(e)}"
+        return f"Error performing vector search: {str(e)}" """

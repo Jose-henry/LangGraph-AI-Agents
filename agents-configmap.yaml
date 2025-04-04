@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: agents-configmap
+data:
+  YUGABYTE_DB_URL: postgresql://yugabyte:rantya2018@yb-tserver-service.yb-demo.svc.cluster.local:5433/yugabyte?sslmode=disable
+  RAG_AGENT_URL: "http://rag-service.default.svc.cluster.local:8001"
+  MODEL: openai/gpt-4o-mini
+  OPENAI_MODEL_NAME: gpt-4o-mini
