@@ -74,7 +74,7 @@ def generate_response(state: State):
         2. Choose an appropriate format for the information (paragraphs, bullets, numbered list, etc.)
         3. Add relevant context and explanations where helpful
         4. Maintain a friendly, helpful tone throughout
-        5. If the bullet points indicate there isn't enough information, acknowledge this and suggest alternatives
+        5. If the bullet points indicate there isn't enough information, acknowledge this and make sure you tell them you dont have the necessary information
         6. If appropriate, offer a brief summary at the end
         
         The goal is to make the information more engaging and easier to understand than raw bullet points."""
