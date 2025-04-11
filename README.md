@@ -10,18 +10,21 @@ Before running the services, set up your development environment:
    source venv/bin/activate  # Linux/Mac
    # OR
    .\venv\Scripts\activate  # Windows
+
+   # OR
+    use conda
    ```
 
 2. **Install dependencies:**
-   ```bash
-   # For development with testing
-   pip install -r requirements-dev.txt
+   # For integration and unit testing with testing
+   pip install -r requirements-dev.txt in .gitlab-ci.yml file
    
-   # For production only
+   ```bash
+   # For production/development only
    pip install -r requirements.txt
    ```
 
-3. **Set up environment variables:**
+4. **Set up environment variables:**
    Create a `.env` file with required configurations:
    ```env
    OPENAI_API_KEY=your_key_here
