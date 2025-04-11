@@ -4,6 +4,7 @@ from typing import Optional
 import uvicorn
 from src.agent import run_agent
 import uuid
+from prometheus_fastapi_instrumentator import Instrumentator
 
 # Create FastAPI application
 app = FastAPI(
@@ -11,6 +12,12 @@ app = FastAPI(
     description="API for querying a QnA agent that refines RAG-based responses",
     version="1.0.0"
 )
+
+instrumentator = Instrumentator(
+    should_respect_env_var=True,
+    env_var_name="ENABLE_METRICS",
+)
+instrumentator.instrument(app).expose(app)
 
 # Define request model
 class QueryRequest(BaseModel):

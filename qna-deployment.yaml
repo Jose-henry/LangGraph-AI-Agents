@@ -1,4 +1,3 @@
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -12,15 +11,26 @@ spec:
       app: qna
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8000"
+        prometheus.io/path: "/metrics"
       labels:
         app: qna
     spec:
       containers:
         - name: qna
-          image: qna-image:1.0
+          image: qna-image:5.0
           ports:
             - containerPort: 8000
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
           env:
+            - name: ENABLE_METRICS
+              value: "true"
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -64,3 +74,29 @@ spec:
     - protocol: TCP
       port: 8000
       targetPort: 8000
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: qna-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: qna-deployment
+  minReplicaCount: 2
+  maxReplicaCount: 10
+  pollingInterval: 15  # seconds
+  cooldownPeriod: 60   # seconds
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-server.default.svc.cluster.local
+        metricName: http_requests_total
+        threshold: '0.5'
+        query: |
+          sum(rate(http_requests_total{job="qna-service", method="POST", handler="/query"}[1m]))
+    - type: cpu
+      metadata:
+        type: Utilization         # or "AverageValue"
+        value: "15"               # % CPU per pod before scaling

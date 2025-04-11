@@ -11,15 +11,26 @@ spec:
       app: rag
   template:
     metadata:
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "8001"
+        prometheus.io/path: "/metrics"
       labels:
         app: rag
     spec:
       containers:
         - name: rag
-          image: rag-image:1.0
+          image: rag-image:5.0
           ports:
             - containerPort: 8001
+          resources:
+            requests:
+              cpu: "100m"
+            limits:
+              cpu: "500m"
           env:
+            - name: ENABLE_METRICS
+              value: "true"
             - name: OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -51,9 +62,6 @@ spec:
                   name: agents-configmap
                   key: OPENAI_MODEL_NAME
 
-
-
-
 ---
 apiVersion: v1
 kind: Service
@@ -66,3 +74,29 @@ spec:
     - protocol: TCP
       port: 8001
       targetPort: 8001
+
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: rag-scaledobject
+  namespace: default
+spec:
+  scaleTargetRef:
+    name: rag-deployment
+  minReplicaCount: 2
+  maxReplicaCount: 10
+  pollingInterval: 15
+  cooldownPeriod: 60
+  triggers:
+    - type: prometheus
+      metadata:
+        serverAddress: http://prometheus-server.default.svc.cluster.local
+        metricName: http_requests_total
+        threshold: '0.5'
+        query: |
+          sum(rate(http_requests_total{job="rag-service", method="POST", handler="/query"}[1m]))
+    - type: cpu
+      metadata:
+        type: Utilization
+        value: "15"

@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: block-qna-to-rag
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      app: rag
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app: qna
+      ports:
+        - protocol: TCP
+          port: 80

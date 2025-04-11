@@ -1,0 +1,12 @@
+serverFiles:
+  prometheus.yml:
+    scrape_configs:
+      - job_name: 'kubernetes'
+        static_configs:
+          - targets: ['localhost:9090']
+      - job_name: 'qna-service'
+        static_configs:
+          - targets: ['qna-service.default.svc.cluster.local:8000']
+      - job_name: 'rag-service'
+        static_configs:
+          - targets: ['rag-service.default.svc.cluster.local:8001']

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: additional-scrape-configs
+  namespace: default
+data:
+  additional-scrape-configs.yaml: |
+    - job_name: 'qna-service'
+      static_configs:
+        - targets: ['qna-service.default.svc.cluster.local:8000']
+
+    - job_name: 'rag-service'
+      static_configs:
+        - targets: ['rag-service.default.svc.cluster.local:8001']

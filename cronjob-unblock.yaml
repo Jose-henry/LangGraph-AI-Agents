@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: unblock-qna-to-rag
+spec:
+  schedule: "0 2 * * *"  # Runs at 2 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cronjob-sa  # Allows API access
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "kubectl delete networkpolicy block-qna-to-rag"
+          restartPolicy: OnFailure

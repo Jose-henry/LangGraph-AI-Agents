@@ -1,0 +1,19 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: block-qna-to-rag
+spec:
+  schedule: "0 0 * * *"  # Runs at 12 AM
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          serviceAccountName: cronjob-sa  # Allows API access
+          containers:
+            - name: kubectl
+              image: bitnami/kubectl
+              command:
+                - "/bin/sh"
+                - "-c"
+                - "kubectl apply -f https://raw.githubusercontent.com/Jose-henry/LangGraph-AI-Agents/main/qna-rag-NetworkPolicy.yaml"
+          restartPolicy: OnFailure

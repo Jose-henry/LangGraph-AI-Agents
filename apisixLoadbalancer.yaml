@@ -1,0 +1,21 @@
+apiVersion: apisix.apache.org/v2alpha1
+kind: ApisixRoute
+metadata:
+  name: rag-service-loadbalance
+spec:
+  http:
+    - name: rag-loadbalance
+      match:
+        hosts:
+          - rag-service.default.svc.cluster.local
+      upstream:
+        serviceName: rag-service
+        type: least_conn  # Load balancing method
+        nodes:
+          - host: rag-instance1.default.svc.cluster.local
+            port: 80
+            weight: 60
+          - host: rag-instance2.default.svc.cluster.local
+            port: 80
+            weight: 40
+

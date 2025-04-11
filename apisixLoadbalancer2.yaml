@@ -1,0 +1,30 @@
+apiVersion: apisix.apache.org/v2alpha1
+kind: ApisixRoute
+metadata:
+  name: rag-service-loadbalance
+spec:
+  http:
+    - name: rag-loadbalance
+      match:
+        hosts:
+          - rag-service.default.svc.cluster.local
+      upstream:
+        serviceName: rag-service
+        type: least_conn  # Load balancing method
+        checks:
+          active:
+            healthy:
+              interval: 5  # Health check every 5 seconds
+              http_statuses: [200, 302]  # Valid response codes
+              successes: 2  # Must pass 2 consecutive checks
+            unhealthy:
+              interval: 5
+              http_statuses: [500, 502, 503, 504]  # Remove bad instances
+              failures: 2  # If 2 checks fail, remove pod
+          passive:
+            healthy:
+              http_statuses: [200, 302]
+              successes: 3  # 3 successful responses restore pod
+            unhealthy:
+              http_statuses: [500, 502, 503, 504]
+              failures: 3  # 3 failed requests remove pod
