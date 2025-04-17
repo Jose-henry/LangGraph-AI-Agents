@@ -130,7 +130,7 @@ Deploy to Kubernetes cluster:
 ---
 
 ## CI/CD Pipeline
-The project includes GitLab CI configuration with:
+The project includes GitLab CI configuration with Argo CD(USED):
 - Automated testing
 - Test coverage reporting
 - JUnit test results
