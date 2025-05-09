@@ -154,4 +154,8 @@ The RAG service uses Pinecone as the vector store:
 4. Push to the branch
 5. Create a Pull Request
 
+
+## Link to Resource configuration
+[Yaml Configs](https://github.com/Jose-henry/QnA-Config)
+
 ---
